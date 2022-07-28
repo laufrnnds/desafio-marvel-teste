@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-param-reassign */
 import {
   createAsyncThunk,
@@ -6,16 +7,21 @@ import {
 } from '@reduxjs/toolkit';
 import { marvel } from '../../../services';
 
+// 1 - DEFINIR QUAL O MOLDE DE DADOS QUE ESTARÁ SENDO GRAVADO NA STORE DO REDUX
 export interface Character {
   id: string;
   name?: string;
-  imgPath?: string;
+  thumbnail?: {
+    path: string;
+    extension: string;
+  };
   description?: string;
   favorite?: boolean;
 }
 
+// 2 - CRIAR UM ADAPTER PARA O MOLDE DE DADOS
 const adapter = createEntityAdapter<Character>({
-  selectId: (item) => item.id,
+  selectId: (character) => character.id,
 });
 
 export const { selectAll, selectById } = adapter.getSelectors(
@@ -24,17 +30,16 @@ export const { selectAll, selectById } = adapter.getSelectors(
 
 export const getAll = createAsyncThunk('getAllCharacters', async () => {
   const response = await marvel.get('/characters');
-  return response.data.results;
+  const { id, name, description, thumbnail } = response.data.results;
+  const { path } = thumbnail;
+
+  return { id, name, description, path };
 });
 
 const charactersSlice = createSlice({
   name: 'characters',
   initialState: adapter.getInitialState({ loading: false }),
   reducers: {
-    addOne: adapter.addOne,
-    addMany: adapter.addMany,
-    updateOne: adapter.updateOne,
-    setAll: adapter.setAll,
     upsertOne: adapter.upsertOne,
   },
   extraReducers: (builder) => {

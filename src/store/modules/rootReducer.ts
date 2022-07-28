@@ -1,13 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import comic from './comics/comicSlice';
-
 import characters from './characters/charactersSlice';
 
-import { likeReducer } from './likes/reducer';
+import likes from './likes/LikesSlice';
 
 export const rootReducer = combineReducers({
-  comic,
   characters,
-  likeReducer,
+  likes,
 });

@@ -27,10 +27,10 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { useSelector } from 'react-redux';
 import { Button, Dialog } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import Footer from '../../components/Footer/Footer';
+import { useAppSelector } from '../../store/modules/types-hooks';
 
 const drawerWidth = 240;
 
@@ -41,16 +41,16 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   padding: theme.spacing(3),
   transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
+    duration: theme.transitions.duration.leavingScreen
   }),
   // marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.enteringScreen
     }),
-    marginLeft: 0,
-  }),
+    marginLeft: 0
+  })
 }));
 
 interface AppBarProps extends MuiAppBarProps {
@@ -58,20 +58,20 @@ interface AppBarProps extends MuiAppBarProps {
 }
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== 'open'
 })<AppBarProps>(({ theme, open }) => ({
   transition: theme.transitions.create(['margin', 'width'], {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
+    duration: theme.transitions.duration.leavingScreen
   }),
   ...(open && {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
+      duration: theme.transitions.duration.enteringScreen
+    })
+  })
 }));
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -80,7 +80,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
+  justifyContent: 'flex-end'
 }));
 
 interface LayoutDefaultPros {
@@ -97,10 +97,11 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const LayoutDefault: React.FC<LayoutDefaultPros> = ({
-  component: Component,
+  component: Component
 }) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const favoritos = useAppSelector((state) => state.likes.favoritos);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -120,14 +121,14 @@ const LayoutDefault: React.FC<LayoutDefaultPros> = ({
     setOpenx(false);
   };
 
-  const likeRedux: ILike = useSelector((state: any) => state.likeReducer);
+  const qtdLikes = useAppSelector((state) => state.likes.contador);
 
   return (
     <Box
       sx={{
         minHeight: '100vh',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column'
       }}
     >
       <CssBaseline />
@@ -149,7 +150,7 @@ const LayoutDefault: React.FC<LayoutDefaultPros> = ({
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <IconButton aria-label="add to favorites" onClick={handleClickOpen}>
-              <Badge badgeContent={likeRedux.quantidade} color="secondary">
+              <Badge badgeContent={qtdLikes} color="secondary">
                 <FavoriteIcon sx={{ fontSize: 30, color: '#ffff' }} />
               </Badge>
             </IconButton>
@@ -167,8 +168,8 @@ const LayoutDefault: React.FC<LayoutDefaultPros> = ({
           flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            boxSizing: 'border-box',
-          },
+            boxSizing: 'border-box'
+          }
         }}
         variant="persistent"
         anchor="left"
@@ -253,22 +254,21 @@ const LayoutDefault: React.FC<LayoutDefaultPros> = ({
           </Toolbar>
         </AppBar>
         <List>
-          <ListItem button>
-            <ListItemText primary="Phone ringtone" secondary="Titania" />
-          </ListItem>
-          <Divider />
-          <ListItem button>
-            <ListItemText
-              primary="Default notification ringtone"
-              secondary="Tethys"
-            />
-          </ListItem>
+          {favoritos.map((favorito) => (
+            <ListItem button key={favorito.id}>
+              <ListItemText
+                primary={favorito.name}
+                secondary={favorito.description}
+              />
+              <Divider />
+            </ListItem>
+          ))}
         </List>
       </Dialog>
       <Main
         open={openx}
         sx={{
-          overflow: 'hidden',
+          overflow: 'hidden'
         }}
       >
         <Component />
