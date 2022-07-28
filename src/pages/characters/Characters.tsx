@@ -13,7 +13,7 @@ import {
   CardMedia,
   Grid,
   IconButton,
-  Typography,
+  Typography
 } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 
@@ -21,15 +21,16 @@ import React, { useEffect, useRef } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {
+  Character,
   getAll,
   selectAll,
-  upsertOne,
+  upsertOne
 } from '../../store/modules/characters/charactersSlice';
-import { adicionarLike, retirarLike } from '../../store/modules/likes/actions';
 import {
   useAppDispatch,
-  useAppSelector,
+  useAppSelector
 } from '../../store/modules/types-hooks';
+import { adicionaUm, removeUm } from '../../store/modules/likes/LikesSlice';
 
 const Characters: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -38,18 +39,10 @@ const Characters: React.FC = () => {
   const charactersLoading = useAppSelector((state) => state.characters.loading);
 
   const ref = useRef(null);
-  const handleFavorite = (id: any, favorite: boolean) => {
-    // let updateFavorite = true;
-    // if (favorite === true) {
-    //   updateFavorite = false;
-    // }
+  const handleFavorite = (id: any, favorite: boolean, character: Character) => {
     dispatch(upsertOne({ id, favorite: !favorite }));
 
-    dispatch(
-      favorite === true
-        ? retirarLike({ quantidade: 1 })
-        : adicionarLike({ quantidade: 1 })
-    );
+    dispatch(!favorite ? adicionaUm(character) : removeUm(id));
 
     console.log(charactersRedux);
   };
@@ -70,7 +63,7 @@ const Characters: React.FC = () => {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        overflow: 'hidden',
+        overflow: 'hidden'
       }}
     >
       {charactersLoading && <div>Loading...</div>}
@@ -112,7 +105,7 @@ const Characters: React.FC = () => {
                 <IconButton
                   ref={ref}
                   aria-label="add to favorites"
-                  onClick={() => handleFavorite(dado.id, dado.favorite)}
+                  onClick={() => handleFavorite(dado.id, dado.favorite, dado)}
                 >
                   {dado.favorite ? (
                     <FavoriteIcon color="secondary" />

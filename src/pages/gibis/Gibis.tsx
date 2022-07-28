@@ -10,7 +10,7 @@ import {
   CardMedia,
   Grid,
   IconButton,
-  Typography,
+  Typography
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,13 +19,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { marvel } from '../../services';
-import {
-  Comics,
-  createComic,
-  requestComic,
-  requestComicError,
-} from '../../store/modules/comics/comicSlice';
-import { adicionarLike, retirarLike } from '../../store/modules/likes/actions';
 
 const Gibis: React.FC = () => {
   // const dispatch = useDispatch();
