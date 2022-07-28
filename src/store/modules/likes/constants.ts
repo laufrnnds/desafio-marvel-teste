@@ -1,0 +1,4 @@
+export const LIKES_STORE = {
+  ADICIONAR: 'ADICIONAR',
+  RETIRAR: 'RETIRAR',
+};
